@@ -18,6 +18,10 @@ def validate_and_train(model, augmentation=False, sampling_strategy=0.3):
         rf = mod.create_rf()
         rf = __train_model(augmentation, rf, ds)
         mod.test(rf, ds.test_ds)
+    elif model == 'gradient_boost':
+        gb = mod.create_gb()
+        gb = __train_model(augmentation, gb, ds)
+        mod.test(gb, ds.test_ds)
 
 
 def __train_model(augmentation, model, ds):

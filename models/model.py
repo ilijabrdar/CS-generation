@@ -1,5 +1,5 @@
 from sklearn import svm
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 import evaluate
 
 
@@ -9,6 +9,10 @@ def create_svm():
 
 def create_rf():
     return RandomForestClassifier(max_depth=5, random_state=0)
+
+
+def create_gb():
+    return GradientBoostingClassifier()
 
 
 def train(ds, model):

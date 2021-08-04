@@ -22,6 +22,10 @@ def validate_and_train(model, augmentation=False, sampling_strategy=0.3):
         gb = mod.create_gb()
         gb = __train_model(augmentation, gb, ds)
         mod.test(gb, ds.test_ds)
+    elif model == 'bagging':
+        bg = mod.create_bagging()
+        bg = __train_model(augmentation, bg, ds)
+        mod.test(bg, ds.test_ds)
 
 
 def __train_model(augmentation, model, ds):

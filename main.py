@@ -34,6 +34,6 @@ if __name__ == '__main__':
     config.get_config()
     warnings.filterwarnings('ignore')
     # generate_god_class_smells()
-    train.validate_and_train(model='gradient_boost', augmentation=True, sampling_strategy=0.5)
+    train.validate_and_train(model='bagging', augmentation=True, sampling_strategy=0.5)
     # train_svm()
 

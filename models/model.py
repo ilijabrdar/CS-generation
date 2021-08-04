@@ -1,5 +1,5 @@
 from sklearn import svm
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, BaggingClassifier
 import evaluate
 
 
@@ -13,6 +13,10 @@ def create_rf():
 
 def create_gb():
     return GradientBoostingClassifier()
+
+
+def create_bagging():
+    return BaggingClassifier(base_estimator=svm.SVC(), n_estimators=10, random_state=0)
 
 
 def train(ds, model):

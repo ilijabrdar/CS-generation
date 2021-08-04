@@ -1,0 +1,16 @@
+REFACTORING_SERVICE:
+  HTTP_URL: http://localhost:8080/smell-generation-demo-1.0-SNAPSHOT/api/blob/class
+  WS_URL: ws://localhost:8080/smell-generation-demo-1.0-SNAPSHOT/ws
+
+CK_SERVICE:
+  JAR_PATH: C:\\Users\\ilija\\OneDrive\\Desktop\\diplomski\\ck\\target\\ck-0.6.5-SNAPSHOT-jar-with-dependencies.jar
+  OUTPUT_DIR_PATH: C:\\Users\\ilija\\OneDrive\\Desktop\\diplomski\\dataset\\godclass-labeled\\gc-train-metrics
+  LOGGER_CONFIG_PATH: C:\\Users\\ilija\\OneDrive\\Desktop\\diplomski\\ck\\src\\test\\resources\\log4j.xml
+
+GOD_CLASS_TRAIN:
+  OUTPUT_DIR_PATH: C:\\Users\\ilija\\OneDrive\\Desktop\\diplomski\\dataset\\godclass-labeled\\generated
+  SAMPLING_RATIO: 1
+  MAX_ITERATIONS: 5000
+
+DATASET:
+  DIR_PATH: C:\\Users\\ilija\\OneDrive\\Desktop\\diplomski\\dataset\\godclass-labeled\\new_dataset_whole

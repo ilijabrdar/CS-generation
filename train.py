@@ -4,22 +4,31 @@ import config
 import numpy as np
 from mlcq import GodClassDS
 from sklearn.model_selection import StratifiedKFold, cross_val_score
-import models.svm as svm
+import models.model as mod
 
 
 def validate_and_train(model, augmentation=False, sampling_strategy=0.3):
     ds = GodClassDS()
     __load_datasets(ds)
     if model == 'svm':
-        clf = svm.create_svm()
-        if augmentation:
-            strategy = __validate(ds, clf)
-            print(strategy)
-            ds.augment_ds(strategy)
-            clf = svm.train(ds.augmented_ds, clf)
-        else:
-            clf = svm.train(ds.training_ds, clf)
-        svm.test(clf, ds.test_ds)
+        clf = mod.create_svm()
+        clf = __train_model(augmentation, clf, ds)
+        mod.test(clf, ds.test_ds)
+    elif model == 'random_forest':
+        rf = mod.create_rf()
+        rf = __train_model(augmentation, rf, ds)
+        mod.test(rf, ds.test_ds)
+
+
+def __train_model(augmentation, model, ds):
+    if augmentation:
+        strategy = __validate(ds, model)
+        print(strategy)
+        ds.augment_ds(strategy)
+        model = mod.train(ds.augmented_ds, model)
+    else:
+        model = mod.train(ds.training_ds, model)
+    return model
 
 
 def __validate(ds, clf):

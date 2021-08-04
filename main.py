@@ -7,7 +7,7 @@ import config
 import train
 import mlcq
 import refactor
-import models.svm as svm
+import models.model as svm
 import preprocess
 
 
@@ -34,6 +34,6 @@ if __name__ == '__main__':
     config.get_config()
     warnings.filterwarnings('ignore')
     # generate_god_class_smells()
-    train.validate_and_train(model='svm', augmentation=True, sampling_strategy=0.5)
+    train.validate_and_train(model='random_forest', augmentation=True, sampling_strategy=0.5)
     # train_svm()
 

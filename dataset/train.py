@@ -2,7 +2,7 @@ import numpy as np
 from dataset.mlcq import GodClassDS
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 import models.model as mod
-from augmentation.augmenter import SyntheticAugmenter, SMOTEAugmenter
+from augmentation.augmenter import SyntheticAugmenter, SMOTEAugmenter, UnOvAugmenter
 
 
 def validate_and_train(model, augmentation=None):
@@ -31,19 +31,25 @@ def validate_and_train(model, augmentation=None):
 def __train_model(augmentation, model, ds):
     if augmentation is None:
         model = mod.train(ds.training_ds, model)
-    elif augmentation == 'synthetic':
-        sa = SyntheticAugmenter(training_ds=ds.training_ds, generated_ds=ds.generated_ds)
-        strategy = __validate(sa, model)
+    else:
+        augmenter = __create_augmenter(augmentation, ds)
+        strategy = __validate(augmenter, model)
         print(strategy)
-        sa.do_augmentation(strategy)
-        model = mod.train(sa.augmented_ds, model)
-    elif augmentation == 'smote':
-        sa = SMOTEAugmenter(training_ds=ds.training_ds)
-        strategy = __validate(sa, model)
-        print(strategy)
-        sa.do_augmentation(strategy)
-        model = mod.train(sa.augmented_ds, model)
+        augmenter.do_augmentation(strategy)
+        model = mod.train(augmenter.augmented_ds, model)
     return model
+
+
+def __create_augmenter(augmentation, ds):
+    if augmentation == 'synthetic':
+        augmenter = SyntheticAugmenter(training_ds=ds.training_ds, generated_ds=ds.generated_ds)
+    elif augmentation == 'smote':
+        augmenter = SMOTEAugmenter(training_ds=ds.training_ds)
+    elif augmentation == 'under_over_sampling':
+        augmenter = UnOvAugmenter(training_ds=ds.training_ds)
+    else:
+        raise ValueError('No such augmenter')
+    return augmenter
 
 
 def __validate(augmenter, clf):
@@ -85,6 +91,7 @@ def __cross_validate(train_x, train_y, model):
     scores = cross_val_score(model, train_x, train_y, cv=skf, scoring='f1')
     avg = round(sum(scores) / len(scores), 2)
     return avg
+
 
 
 def __count_ds(ds):

@@ -1,4 +1,0 @@
-import smote
-
-if __name__ == '__main__':
-    pass

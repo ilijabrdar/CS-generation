@@ -1,19 +1,21 @@
 import numpy as np
+from imblearn.over_sampling import SMOTE
+from collections import Counter
 
 
 class Augmenter:
     def __init__(self, ds):
-        self.generated_ds = ds
+        self.training_ds = ds
         self.augmented_ds = ([], [])
 
-    def do_augmentation(self):
-        self.augmented_ds = self.generated_ds
+    def do_augmentation(self, sampling_strategy=0.3):
+        self.augmented_ds = self.training_ds
 
 
 class SyntheticAugmenter(Augmenter):
     def __init__(self, training_ds, generated_ds):
-        super().__init__(generated_ds)
-        self.training_ds = training_ds
+        super().__init__(training_ds)
+        self.generated_ds = generated_ds
 
     def do_augmentation(self, sampling_strategy=0.3):
         clean, smelly = self.__count_training_ds()
@@ -35,4 +37,14 @@ class SyntheticAugmenter(Augmenter):
         unique, counts = np.unique(flat, return_counts=True)
         total = dict(zip(unique, counts))
         return total[0], total[1]
+
+
+class SMOTEAugmenter(Augmenter):
+    def __init__(self, training_ds):
+        super().__init__(training_ds)
+
+    def do_augmentation(self, sampling_strategy=0.3):
+        ratio = sampling_strategy / (1 - sampling_strategy)
+        sm = SMOTE(random_state=42, sampling_strategy=ratio, k_neighbors=200)
+        self.augmented_ds = sm.fit_resample(self.training_ds[0], self.training_ds[1])
 

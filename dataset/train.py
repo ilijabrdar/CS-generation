@@ -2,7 +2,7 @@ import numpy as np
 from dataset.mlcq import GodClassDS
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 import models.model as mod
-from augmentation.augmenter import SyntheticAugmenter
+from augmentation.augmenter import SyntheticAugmenter, SMOTEAugmenter
 
 
 def validate_and_train(model, augmentation=None):
@@ -37,12 +37,17 @@ def __train_model(augmentation, model, ds):
         print(strategy)
         sa.do_augmentation(strategy)
         model = mod.train(sa.augmented_ds, model)
-
+    elif augmentation == 'smote':
+        sa = SMOTEAugmenter(training_ds=ds.training_ds)
+        strategy = __validate(sa, model)
+        print(strategy)
+        sa.do_augmentation(strategy)
+        model = mod.train(sa.augmented_ds, model)
     return model
 
 
 def __validate(augmenter, clf):
-    augmenter.do_augmentation(0.1)
+    augmenter.do_augmentation(0.12)
     score_10 = __cross_validate(augmenter.augmented_ds[0], augmenter.augmented_ds[1], clf)
     augmenter.do_augmentation(0.2)
     score_20 = __cross_validate(augmenter.augmented_ds[0], augmenter.augmented_ds[1], clf)

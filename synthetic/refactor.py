@@ -1,9 +1,8 @@
 import json
 from websocket import create_connection
-from requests import get, post
+from requests import post
 import os
-import config
-import pandas as pd
+from util import config
 
 HTTP_URL = config.get('REFACTORING_SERVICE', 'HTTP_URL')
 WS_URL = config.get('REFACTORING_SERVICE', 'WS_URL')

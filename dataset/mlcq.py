@@ -1,8 +1,8 @@
 from sklearn.model_selection import train_test_split
 import os
 import numpy as np
-import config
-import preprocess
+from util import config
+from dataset import preprocess
 
 CK_OUTPUT_ORIGINAL = os.path.join(config.get('CK_SERVICE', 'OUTPUT_DIR_PATH'), 'original')
 CK_OUTPUT_GENERATED = os.path.join(config.get('CK_SERVICE', 'OUTPUT_DIR_PATH'), 'generated')
@@ -28,20 +28,6 @@ class GodClassDS:
                 for filename in filenames:
                     files.append(os.path.join(root, filename))
         return files, clean, total - clean
-
-    # def load_all_labeled_samples(self):
-    #     samples = []
-    #     labels = []
-    #     for root, directory, filenames in os.walk(self.dataset_path):
-    #         if root.endswith('none'):
-    #             labels.extend([0] * len(filenames))
-    #         elif root.endswith('generated'):
-    #             continue
-    #         else:
-    #             labels.extend([1] * len(filenames))
-    #         for filename in filenames:
-    #             samples.append(os.path.join(root, filename))
-    #     self.ds = (samples, labels)
 
     def load_and_preprocessed_original_ds(self):
         samples, labels = preprocess.preprocess_data(CK_OUTPUT_ORIGINAL)

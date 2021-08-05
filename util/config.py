@@ -1,12 +1,15 @@
+import os
+
 import yaml
 
-CONFIG_FILE_PATH = './resources/config.yaml'
+CONFIG_FILE_PATH = '../resources/config.yaml'
 
 props = None
 
 
 def get_config():
     global props
+    print(os.getcwd())
     if props is None:
         with open(CONFIG_FILE_PATH, 'r') as f:
             props = yaml.safe_load(f)

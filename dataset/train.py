@@ -1,13 +1,10 @@
-import operator
-
-import config
 import numpy as np
-from mlcq import GodClassDS
+from dataset.mlcq import GodClassDS
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 import models.model as mod
 
 
-def validate_and_train(model, augmentation=False, sampling_strategy=0.3):
+def validate_and_train(model, augmentation=False):
     ds = GodClassDS()
     __load_datasets(ds)
     if model == 'svm':
@@ -26,6 +23,8 @@ def validate_and_train(model, augmentation=False, sampling_strategy=0.3):
         bg = mod.create_bagging()
         bg = __train_model(augmentation, bg, ds)
         mod.test(bg, ds.test_ds)
+    else:
+        raise ValueError('No such model')
 
 
 def __train_model(augmentation, model, ds):
@@ -40,7 +39,6 @@ def __train_model(augmentation, model, ds):
 
 
 def __validate(ds, clf):
-    # clf = svm.create_svm()
     ds.augment_ds(0.1)
     score_10 = __cross_validate(ds.augmented_ds[0], ds.augmented_ds[1], clf)
     ds.augment_ds(0.2)
@@ -63,14 +61,14 @@ def __load_datasets(ds):
 
 def __load_original_dataset(ds: GodClassDS):
     ds.divide_train_test_samples()
-    print('original: ', count_ds(ds.ds))
-    print('training: ', count_ds(ds.training_ds))
-    print('test: ', count_ds(ds.test_ds))
+    print('original: ', __count_ds(ds.ds))
+    print('training: ', __count_ds(ds.training_ds))
+    print('test: ', __count_ds(ds.test_ds))
 
 
 def __load_generated_dataset(ds: GodClassDS):
     ds.load_and_preprocess_generated_ds()
-    print('generated: ', count_ds(ds.generated_ds))
+    print('generated: ', __count_ds(ds.generated_ds))
 
 
 def __cross_validate(train_x, train_y, model):
@@ -80,7 +78,7 @@ def __cross_validate(train_x, train_y, model):
     return avg
 
 
-def count_ds(ds):
+def __count_ds(ds):
     flat = np.ravel(ds[1])
     unique, counts = np.unique(flat, return_counts=True)
     total = dict(zip(unique, counts))

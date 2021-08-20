@@ -13,6 +13,7 @@ class GodClassDS:
         self.ds = ([], [])
         self.training_ds = ([], [])
         self.test_ds = ([], [])
+        self.validation_ds = ([], [])
         self.generated_ds = ([], [])
 
     def get_original_samples(self):
@@ -38,7 +39,10 @@ class GodClassDS:
     def divide_train_test_samples(self):
         self.load_and_preprocessed_original_ds()
         x, y = self.ds
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
+        x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
+        x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=0.25, random_state=42,
+                                                          stratify=y_train_val)
         self.training_ds = (x_train, y_train)
+        self.validation_ds = (x_val, y_val)
         self.test_ds = (x_test, y_test)
 

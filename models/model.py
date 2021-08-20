@@ -16,7 +16,8 @@ def create_gb():
 
 
 def create_bagging():
-    return BaggingClassifier(base_estimator=svm.SVC(), n_estimators=10, random_state=0)
+    svc = svm.SVC(C=0.1, kernel='linear', gamma='scale')
+    return BaggingClassifier(base_estimator=svc, bootstrap=True, random_state=0)
 
 
 def train(ds, model):
@@ -28,5 +29,5 @@ def train(ds, model):
 def test(model, ds):
     features, labels = ds
     predicted_labels = model.predict(features)
-    evaluate.evaluate(predicted_labels, labels)
+    return evaluate.evaluate(predicted_labels, labels)
 

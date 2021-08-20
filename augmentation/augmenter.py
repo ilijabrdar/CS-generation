@@ -3,6 +3,7 @@ from imblearn.over_sampling import SMOTE
 from imblearn.combine import SMOTETomek, SMOTEENN
 from imblearn.under_sampling import EditedNearestNeighbours
 
+
 class Augmenter:
     def __init__(self, ds):
         self.training_ds = ds
@@ -45,7 +46,7 @@ class SMOTEAugmenter(Augmenter):
 
     def do_augmentation(self, sampling_strategy=0.3):
         ratio = sampling_strategy / (1 - sampling_strategy)
-        sm = SMOTE(random_state=42, sampling_strategy=ratio, k_neighbors=200)
+        sm = SMOTE(random_state=42, sampling_strategy=ratio, k_neighbors=150)
         self.augmented_ds = sm.fit_resample(self.training_ds[0], self.training_ds[1])
 
 

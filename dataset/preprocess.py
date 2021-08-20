@@ -3,20 +3,36 @@ import pandas as pd
 import os
 
 
-def preprocess_data(target_path: str):
-    samples = __get_all_samples_and_labels(target_path)
+def gc_preprocess_data(target_path: str):
+    samples = __get_all_class_samples(target_path)
     samples = __drop_inner_classes(samples)
     if target_path.endswith('original'):
         labels = __extract_labels(samples)
     else:
         labels = [1] * samples.shape[0]
-    samples = __filter_samples(samples)
+    samples = __gc_filter_samples(samples)
     samples = __min_max_normalization(samples)
     return __transform_to_np_arrays(samples, labels)
 
 
-def __get_all_samples_and_labels(path):
+def lm_preprocess_data(target_path: str):
+    samples = __get_all_method_samples(target_path)
+    samples = __from_anonymous_methods(samples)
+    if target_path.endswith('original'):
+        labels = __extract_labels(samples)
+    else:
+        labels = [1] * samples.shape[0]
+    samples = __lm_filter_samples(samples)
+    samples = __min_max_normalization(samples)
+    return __transform_to_np_arrays(samples, labels)
+
+
+def __get_all_class_samples(path):
     return pd.read_csv(os.path.join(path, 'class.csv'))
+
+
+def __get_all_method_samples(path):
+    return pd.read_csv(os.path.join(path, 'method.csv'))
 
 
 def __extract_labels(samples: pd.DataFrame):
@@ -35,8 +51,18 @@ def __drop_inner_classes(samples: pd.DataFrame):
     return samples[is_class_or_interface]
 
 
-def __filter_samples(samples: pd.DataFrame):
+def __from_anonymous_methods(samples: pd.DataFrame):
+    is_not_anonymous = ~samples['class'].str.contains('Anonymous')
+    return samples[is_not_anonymous]
+
+
+def __gc_filter_samples(samples: pd.DataFrame):
     samples = samples.drop(columns=['file', 'class', 'type', 'cbo', 'dit', 'rfc', 'tcc', 'lcc', 'nosi'])
+    return samples
+
+
+def __lm_filter_samples(samples: pd.DataFrame):
+    samples = samples.drop(columns=['file', 'class', 'method', 'constructor', 'line',  'cbo', 'rfc', 'hasJavaDoc'])
     return samples
 
 

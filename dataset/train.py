@@ -6,8 +6,7 @@ from augmentation.augmenter import SyntheticAugmenter, SMOTEAugmenter, UnOvAugme
 import matplotlib.pyplot as plt
 
 
-def validate_and_train(model, augmentation=None):
-    ds = Dataset()
+def validate_and_train(ds, model, augmentation=None):
     __load_datasets(ds, augmentation)
     if model == 'svm':
         clf = mod.create_svm()
@@ -66,7 +65,7 @@ def __validate(augmenter, val_ds, clf):
     score_40 = __cross_validate(*augmenter.augmented_ds, *val_ds, clf)
     augmenter.do_augmentation(0.5)
     score_50 = __cross_validate(*augmenter.augmented_ds, *val_ds, clf)
-    scores = {0.1: score_10, 0.2: score_20, 0.3: score_30, 0.4: score_40, 0.5: score_50}
+    scores = {0.12: score_10, 0.2: score_20, 0.3: score_30, 0.4: score_40, 0.5: score_50}
     print(scores)
     return max(scores, key=scores.get)
 

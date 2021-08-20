@@ -1,3 +1,5 @@
+import collections
+
 import numpy as np
 from imblearn.over_sampling import SMOTE
 from imblearn.combine import SMOTETomek, SMOTEENN
@@ -46,7 +48,7 @@ class SMOTEAugmenter(Augmenter):
 
     def do_augmentation(self, sampling_strategy=0.3):
         ratio = sampling_strategy / (1 - sampling_strategy)
-        sm = SMOTE(random_state=42, sampling_strategy=ratio, k_neighbors=150)
+        sm = SMOTE(random_state=42, sampling_strategy=ratio, k_neighbors=140)
         self.augmented_ds = sm.fit_resample(self.training_ds[0], self.training_ds[1])
 
 

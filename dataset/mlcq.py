@@ -6,10 +6,14 @@ from dataset import preprocess
 CK_GC_OUTPUT_ORIGINAL = os.path.join(config.get('CK_SERVICE', 'GC_OUTPUT_DIR_PATH'), 'original')
 CK_GC_OUTPUT_GENERATED = os.path.join(config.get('CK_SERVICE', 'GC_OUTPUT_DIR_PATH'), 'generated')
 
+CK_LM_OUTPUT_ORIGINAL = os.path.join(config.get('CK_SERVICE', 'LM_OUTPUT_DIR_PATH'), 'original')
+CK_LM_OUTPUT_GENERATED = os.path.join(config.get('CK_SERVICE', 'LM_OUTPUT_DIR_PATH'), 'generated')
+
 
 class Dataset:
-    def __init__(self, path):
+    def __init__(self, path, ds_type='god_class'):
         self.dataset_path = path
+        self.dataset_type = ds_type
         self.ds = ([], [])
         self.training_ds = ([], [])
         self.test_ds = ([], [])
@@ -44,11 +48,17 @@ class Dataset:
         return files, clean, total - clean
 
     def load_and_preprocessed_original_ds(self):
-        samples, labels = preprocess.preprocess_data(CK_GC_OUTPUT_ORIGINAL)
+        if self.dataset_type == 'god_class':
+            samples, labels = preprocess.gc_preprocess_data(CK_GC_OUTPUT_ORIGINAL)
+        else:
+            samples, labels = preprocess.lm_preprocess_data(CK_LM_OUTPUT_ORIGINAL)
         self.ds = (samples, labels)
 
     def load_and_preprocess_generated_ds(self):
-        samples, labels = preprocess.preprocess_data(CK_GC_OUTPUT_GENERATED)
+        if self.dataset_type == 'god_class':
+            samples, labels = preprocess.gc_preprocess_data(CK_GC_OUTPUT_GENERATED)
+        else:
+            samples, labels = preprocess.lm_preprocess_data(CK_LM_OUTPUT_GENERATED)
         self.generated_ds = (samples, labels)
 
     def divide_train_test_samples(self):

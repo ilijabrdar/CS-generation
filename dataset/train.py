@@ -1,5 +1,5 @@
 import numpy as np
-from dataset.mlcq import GodClassDS
+from dataset.mlcq import Dataset
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 import models.model as mod
 from augmentation.augmenter import SyntheticAugmenter, SMOTEAugmenter, UnOvAugmenter
@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 def validate_and_train(model, augmentation=None):
-    ds = GodClassDS()
+    ds = Dataset()
     __load_datasets(ds, augmentation)
     if model == 'svm':
         clf = mod.create_svm()
@@ -77,7 +77,7 @@ def __load_datasets(ds, augmentation):
         __load_generated_dataset(ds)
 
 
-def __load_original_dataset(ds: GodClassDS):
+def __load_original_dataset(ds: Dataset):
     ds.divide_train_test_samples()
     print('original: ', __count_ds(ds.ds))
     print('training: ', __count_ds(ds.training_ds))
@@ -85,7 +85,7 @@ def __load_original_dataset(ds: GodClassDS):
     print('test: ', __count_ds(ds.test_ds))
 
 
-def __load_generated_dataset(ds: GodClassDS):
+def __load_generated_dataset(ds: Dataset):
     ds.load_and_preprocess_generated_ds()
     print('generated: ', __count_ds(ds.generated_ds))
 

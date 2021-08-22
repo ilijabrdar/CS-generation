@@ -12,6 +12,10 @@ CK_JAR = config.get('CK_SERVICE', 'JAR_PATH')
 
 
 def generate_smells(**kwargs):
+    if os.path.exists(kwargs['output']):
+        return
+
+    os.mkdir(kwargs['output'])
     data = {
         'dataset': kwargs['samples'],
         'totalPositive': int(kwargs['smelly']),
@@ -39,14 +43,16 @@ def __send_http(data):
 
 
 def extract_metrics(**kwargs):
-    original_metrics_path = os.path.join(kwargs['metrics_output'], 'original')
     generated_metrics_path = os.path.join(kwargs['metrics_output'], 'generated')
-
-    if not os.path.exists(original_metrics_path):
-        os.mkdir(original_metrics_path)
-        os.chdir(original_metrics_path)
-        os.system('java -jar ' + CK_JAR + ' ' + kwargs['original_dataset_path'] + ' false 0 False')
     if not os.path.exists(generated_metrics_path):
         os.mkdir(generated_metrics_path)
         os.chdir(generated_metrics_path)
         os.system('java -jar ' + CK_JAR + ' ' + kwargs['generated_dataset_path'] + ' false 0 False')
+
+
+def extract_metrics_original_ds(**kwargs):
+    original_metrics_path = os.path.join(kwargs['metrics_output'], 'original')
+    if not os.path.exists(original_metrics_path):
+        os.mkdir(original_metrics_path)
+        os.chdir(original_metrics_path)
+        os.system('java -jar ' + CK_JAR + ' ' + kwargs['original_dataset_path'] + ' false 0 False')

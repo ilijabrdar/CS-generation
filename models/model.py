@@ -4,7 +4,7 @@ from models import evaluate
 
 
 def create_svm():
-    return svm.SVC(kernel='linear')
+    return svm.SVC(kernel='rbf', C=0.2, random_state=0)
 
 
 def create_rf():

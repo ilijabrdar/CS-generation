@@ -57,17 +57,17 @@ def __from_anonymous_methods(samples: pd.DataFrame):
 
 
 def __gc_filter_samples(samples: pd.DataFrame):
-    samples = samples.drop(columns=['file', 'class', 'type', 'cbo', 'dit', 'rfc', 'tcc', 'lcc', 'nosi'])
+    samples = samples.drop(columns=['class', 'type', 'cbo', 'dit', 'rfc', 'tcc', 'lcc', 'nosi'])
     return samples
 
 
 def __lm_filter_samples(samples: pd.DataFrame):
-    samples = samples.drop(columns=['file', 'class', 'method', 'constructor', 'line',  'cbo', 'rfc', 'hasJavaDoc'])
+    samples = samples.drop(columns=['class', 'method', 'constructor', 'line',  'cbo', 'rfc', 'hasJavaDoc'])
     return samples
 
 
 def __min_max_normalization(samples: pd.DataFrame):
-    for col in samples.columns:
+    for col in samples.columns[1:]:
         samples[col] = (samples[col] - samples[col].min()) / (samples[col].max() - samples[col].min())
     samples = samples.fillna(0)
     return samples

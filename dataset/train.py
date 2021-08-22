@@ -97,7 +97,6 @@ def __cross_validate(train_x, train_y, val_x, val_y, model):
     return mod.test(trained_model, (val_x, val_y))
 
 
-
 def __count_ds(ds):
     flat = np.ravel(ds[1])
     unique, counts = np.unique(flat, return_counts=True)

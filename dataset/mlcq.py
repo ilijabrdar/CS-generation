@@ -64,11 +64,12 @@ class Dataset:
 
     def load_and_preprocess_generated_ds(self):
         smelly, clean = self.__count_original_ds()
+        negative_samples = self.ds_files[0][np.ravel(self.training_ds[1]) == 0]
         if self.dataset_type == 'god_class':
-            syn.generate_god_class_smells(self.ds_files[0], clean, smelly)
+            syn.generate_god_class_smells(negative_samples.tolist(), clean, smelly)
             samples, labels = preprocess.gc_preprocess_data(CK_GC_OUTPUT_GENERATED)
         else:
-            syn.generate_long_method_smells(self.ds_files[0], clean, smelly)
+            syn.generate_long_method_smells(negative_samples.tolist(), clean, smelly)
             samples, labels = preprocess.lm_preprocess_data(CK_LM_OUTPUT_GENERATED)
         self.generated_ds = (samples[:, 1:], labels)
 
@@ -78,7 +79,7 @@ class Dataset:
         x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
         x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=0.25, random_state=42,
                                                           stratify=y_train_val)
-        self.ds_files = (x_train[:, 0].tolist(), x_val[:, 0].tolist(), x_test[:, 0].tolist())
+        self.ds_files = (x_train[:, 0], x_val[:, 0], x_test[:, 0])
         self.training_ds = (x_train[:, 1:], y_train)
         self.validation_ds = (x_val[:, 1:], y_val)
         self.test_ds = (x_test[:, 1:], y_test)
